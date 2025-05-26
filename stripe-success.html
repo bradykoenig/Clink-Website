@@ -1,18 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Payment Success</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>
-      window.onload = () => {
-        // Redirect back to your app
-        window.location.href = "clinkapp://stripe-success";
-      };
-    </script>
+    <title>Payment Successful | Clink</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: #00ff88;
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        padding: 0 20px;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      p {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin-bottom: 0.75rem;
+        color: #ccc;
+      }
+    </style>
   </head>
-  <body style="background: #121212; color: #00ff88; font-family: sans-serif; text-align: center; padding-top: 50px;">
+  <body>
     <h1>✅ Payment Successful!</h1>
-    <p>Redirecting back to Clink...</p>
+    <p>Thank you for hiring a creator through Clink.</p>
+    <p>
+      If the creator does not accept your request within <strong>3 business days</strong>,
+      you’ll be automatically refunded.
+    </p>
+    <p>You may now leave this screen and return to the Clink app.</p>
   </body>
 </html>
