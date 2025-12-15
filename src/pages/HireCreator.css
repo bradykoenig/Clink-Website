@@ -1,0 +1,65 @@
+.hire-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+.hire-card {
+  display: flex;
+  gap: 30px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #eee;
+}
+
+.hire-photo {
+  width: 220px;
+  height: 220px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.hire-info h2 {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.hire-service {
+  color: #555;
+  font-size: 18px;
+}
+
+.hire-price-row {
+  margin-top: 16px;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hire-price {
+  color: #2f65f5;
+}
+
+.hire-btn {
+  margin-top: 22px;
+  padding: 12px 24px;
+  background: #2f65f5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.error-text {
+  color: #b30000;
+  font-size: 18px;
+  margin: 40px auto;
+  text-align: center;
+  width: 90%;
+  font-weight: 600;
+}

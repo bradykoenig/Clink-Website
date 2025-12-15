@@ -1,0 +1,82 @@
+.profile-settings-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+.profile-settings-container h1 {
+  font-size: 32px;
+  margin-bottom: 25px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+label {
+  font-weight: 600;
+  color: #333;
+}
+
+input,
+textarea,
+select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  font-size: 15px;
+  width: 100%;
+}
+
+textarea {
+  height: 120px;
+  resize: none;
+}
+
+.photo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-photo-edit {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.btn {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.upload-btn {
+  background: #2f65f5;
+  color: white;
+}
+
+.save-btn {
+  background: #28a745;
+  color: white;
+  margin-top: 10px;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .photo-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-photo-edit {
+    width: 180px;
+    height: 180px;
+  }
+}

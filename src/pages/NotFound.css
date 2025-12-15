@@ -1,0 +1,44 @@
+.notfound-container {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.nf-code {
+  font-size: 90px;
+  color: #2f65f5;
+  margin: 0;
+  font-weight: 900;
+}
+
+.nf-title {
+  font-size: 32px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.nf-text {
+  max-width: 500px;
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 25px;
+}
+
+.nf-btn {
+  padding: 12px 24px;
+  background: #2f65f5;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.nf-btn:hover {
+  opacity: 0.85;
+}
