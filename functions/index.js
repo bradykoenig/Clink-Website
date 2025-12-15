@@ -3,7 +3,7 @@
 // ----------------------------------------------------------
 
 const admin = require("firebase-admin");
-const stripe = require("stripe")("sk_test_51RRGfkQVciB6nxqTYOyjKQol5mHtLAFtZbL4PBBuovGWrXBGyPfws9PNbMfwSu0UsIU2S75S13KgzsqxpCGSf0EX00at6FLOeP"); // replace this with live key in production when finished
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); // replace this with live key in production when finished
 
 admin.initializeApp();
 const db = admin.firestore();
