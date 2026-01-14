@@ -1,44 +1,112 @@
-.auth-container {
+/* PAGE WRAPPER */
+.auth-page {
+  min-height: calc(100vh - 120px);
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 60px 20px 80px;
 }
 
+/* CARD */
 .auth-card {
   width: 100%;
-  max-width: 450px;
-  background: #fafafa;
-  border: 1px solid #ddd;
-  padding: 32px;
-  border-radius: 12px;
+  max-width: 420px;
+  background: white;
+  padding: 36px 32px;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
-.auth-card h1 {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-label {
-  display: block;
-  font-weight: 600;
+/* HEADER */
+.auth-title {
+  font-size: 32px;
+  font-weight: 800;
   margin-bottom: 6px;
+  text-align: center;
 }
 
-input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
+.auth-subtitle {
+  font-size: 15px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 28px;
 }
 
-.auth-btn {
-  width: 100%;
-  padding: 12px;
-  background: #2f65f5;
-  border-radius: 6px;
-  color: white;
+/* FORM */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-card input {
+  color: #111;              /* visible text */
+  background: #ffffff;
+}
+
+.auth-card input::placeholder {
+  color: #9ca3af;           /* subtle gray placeholder */
+}
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 14px;
   font-weight: 600;
+  color: #333;
+}
+
+.form-group input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* BUTTON */
+.auth-btn {
+  margin-top: 10px;
+  background: #2563eb;
+  color: white;
   border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-btn:hover {
+  background: #1e4fc3;
+}
+
+/* FOOTER TEXT */
+.auth-footer-text {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.auth-footer-text a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer-text a:hover {
+  text-decoration: underline;
 }

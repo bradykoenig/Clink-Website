@@ -1,17 +1,33 @@
-// Replace with your real Firebase config
+// firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import { getFunctions } from "firebase/functions";
 
+// Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBZ_zg-2ExnOG14q9SWit6UrQmBHjBvcLU",
-  authDomain: "clink-ae106.firebaseapp.com",
-  projectId: "clink-ae106",
-  storageBucket: "clink-ae106.firebasestorage.app",
-  messagingSenderId: "915781530146",
-  appId: "1:915781530146:web:2f5f62300590300c8bd07b",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+
+// Initialize Firebase services
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+/**
+ * Cloud Functions for frontend → backend communication
+ * Region MUST match your Firebase Functions region (us-central1)
+ */
+const functions = getFunctions(app, "us-central1");
+
+// Export everything your website needs
+export { app, auth, db, storage, functions };

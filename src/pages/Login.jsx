@@ -1,46 +1,71 @@
 import "./Auth.css";
 import { useState } from "react";
 import { loginUser } from "../firebase/auth";
+import PageLayout from "../layouts/PageLayout";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       await loginUser(email, password);
-      alert("Logged in successfully!");
+      navigate("/"); // later: dashboard redirect
     } catch (err) {
       alert(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Login</h1>
+    <PageLayout>
+      <div className="auth-page">
+        <div className="auth-card">
+          <h1 className="auth-title">Welcome Back</h1>
+          <p className="auth-subtitle">
+            Log in to manage your services and projects.
+          </p>
 
-        <form onSubmit={handleLogin}>
-          <label>Email</label>
-          <input
-            type="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <form onSubmit={handleLogin} className="auth-form">
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="you@business.com"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-          <label>Password</label>
-          <input
-            type="password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-          <button className="btn auth-btn" type="submit">
-            Login
-          </button>
-        </form>
+            <button className="auth-btn" type="submit" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+
+          <p className="auth-footer-text">
+            Don’t have an account?{" "}
+            <a href="/register">Create one</a>
+          </p>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

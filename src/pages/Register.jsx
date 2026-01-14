@@ -1,7 +1,7 @@
 import "./Auth.css";
 import { useState } from "react";
 import { registerUser } from "../firebase/auth";
-import { saveUserProfile } from "../firebase/firestore";
+import PageLayout from "../layouts/PageLayout";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -9,47 +9,55 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
     try {
-      const cred = await registerUser(email, password);
-
-      await saveUserProfile(cred.user.uid, {
-        email,
-        role: "business", // default role
-        createdAt: Date.now(),
-      });
-
-      alert("Account created!");
+      await registerUser(email, password);
+      alert("Account created successfully!");
     } catch (err) {
       alert(err.message);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Create Account</h1>
+    <PageLayout>
+      <div className="auth-page">
+        <div className="auth-card">
+          <h1 className="auth-title">Create Account</h1>
+          <p className="auth-subtitle">
+            Sign up to start hiring or offering services.
+          </p>
 
-        <form onSubmit={handleRegister}>
-          <label>Email</label>
-          <input
-            type="email"
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <form onSubmit={handleRegister} className="auth-form">
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="you@business.com"
+                required
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-          <label>Password</label>
-          <input
-            type="password"
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-          <button className="btn auth-btn" type="submit">
-            Register
-          </button>
-        </form>
+            <button className="auth-btn" type="submit">
+              Register
+            </button>
+          </form>
+
+          <p className="auth-footer-text">
+            Already have an account?{" "}
+            <a href="/login">Log in</a>
+          </p>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -1,126 +1,141 @@
-/* Hero Section */
-.hero {
+/* --------------------------
+   PAGE CONTAINER
+---------------------------*/
+.home-container {
   width: 100%;
-  padding: 80px 20px;
-  background: linear-gradient(to bottom right, #fafafa, #ececec);
-  display: flex;
-  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* CONTAINER */
+.home-container {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 60px 20px 100px;
+}
+
+/* HERO */
+.hero {
+  position: relative;
   text-align: center;
+  padding: 90px 20px;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.hero-content {
-  max-width: 800px;
+/* SUBTLE BACKGROUND IMAGE */
+.subtle-hero-bg {
+  background:
+    linear-gradient(
+      rgba(255,255,255,0.92),
+      rgba(255,255,255,0.92)
+    ),
+    url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+  background-size: cover;
+  background-position: center;
 }
 
-.hero h1 {
-  font-size: 42px;
-  font-weight: 700;
-  color: #222;
+/* TEXT */
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.2;
   margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
 }
 
-.hero p {
+.hero-subtitle {
   font-size: 18px;
   color: #555;
-  margin-bottom: 35px;
+  max-width: 620px;
+  margin: 0 auto 30px;
+  position: relative;
+  z-index: 1;
 }
 
+/* BUTTONS */
 .hero-buttons {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
 }
 
-/* Buttons */
-.btn {
-  padding: 12px 24px;
-  border-radius: 6px;
+.hero-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 700;
   text-decoration: none;
-  font-size: 16px;
-  font-weight: 600;
   transition: 0.2s;
 }
 
-.btn.primary {
-  background: #2f65f5;
+.hero-btn.primary {
+  background: #2563eb;
   color: white;
 }
 
-.btn.primary:hover {
-  background: #1f49b8;
+.hero-btn.primary:hover {
+  background: #1e4fc3;
 }
 
-.btn.secondary {
-  background: #ddd;
-  color: #333;
+.hero-btn.secondary {
+  background: #f0f0f0;
+  color: #111;
 }
 
-.btn.secondary:hover {
-  background: #c5c5c5;
+.hero-btn.secondary:hover {
+  background: #e5e5e5;
 }
 
-.btn.large {
-  padding: 16px 32px;
-  font-size: 18px;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 38px;
+  }
 }
 
-/* Features Section */
+
+/* --------------------------
+   FEATURES SECTION
+---------------------------*/
 .features {
-  padding: 70px 20px;
-  text-align: center;
-}
-
-.features h2 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 40px;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-  max-width: 1100px;
-  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
 .feature-card {
-  background: #f7f7f7;
-  border-radius: 10px;
-  padding: 24px;
-  border: 1px solid #e6e6e6;
-  transition: 0.2s;
+  flex: 1;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  border: 1px solid #e5e5e5;
+  transition: 0.25s;
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
-  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card .emoji {
+  font-size: 28px;
+  margin-bottom: 8px;
 }
 
 .feature-card h3 {
   font-size: 20px;
-  margin-bottom: 10px;
-  color: #222;
+  margin-bottom: 6px;
+  font-weight: 700;
 }
 
 .feature-card p {
+  font-size: 15px;
   color: #555;
-}
-
-/* Final CTA Section */
-.cta-final {
-  background: #2f65f5;
-  color: white;
-  text-align: center;
-  padding: 80px 20px;
-}
-
-.cta-final h2 {
-  font-size: 34px;
-  margin-bottom: 12px;
-}
-
-.cta-final p {
-  font-size: 18px;
-  margin-bottom: 25px;
 }
