@@ -28,6 +28,8 @@ select {
   border: 1px solid #bbb;
   font-size: 15px;
   width: 100%;
+  color: #111;
+  background-color: #fff;
 }
 
 textarea {

@@ -1,27 +1,49 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "./firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "./firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+
+      if (user) {
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
+
+        setProfile(snap.exists() ? snap.data() : null);
+      } else {
+        setProfile(null);
+      }
+
       setLoading(false);
     });
 
-    return unsubscribe;
+    return () => unsub();
   }, []);
 
+  const value = {
+    currentUser,
+    profile,
+    loading,
+    isCreator: profile?.role === "creator",
+    isBusiness: profile?.role === "business",
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser }}>
+    <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
   );
-};
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}

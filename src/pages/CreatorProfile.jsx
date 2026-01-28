@@ -1,7 +1,6 @@
 import "./CreatorProfile.css";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { db } from "../firebase/firebaseConfig";
 import { doc, onSnapshot, getDoc } from "firebase/firestore";
 import PageLayout from "../layouts/PageLayout";
 

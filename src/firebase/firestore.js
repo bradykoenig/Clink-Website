@@ -1,4 +1,3 @@
-import { db } from "./firebaseConfig";
 import {
   doc,
   setDoc,

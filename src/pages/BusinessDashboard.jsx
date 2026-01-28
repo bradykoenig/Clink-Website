@@ -1,6 +1,7 @@
+// src/pages/BusinessDashboard.jsx
 import "./BusinessDashboard.css";
 import { useEffect, useState } from "react";
-import { db } from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebase";
 import { useAuth } from "../firebase/AuthContext";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,9 @@ export default function BusinessDashboard() {
 
     const unsub = onSnapshot(q, (snapshot) => {
       const list = [];
-      snapshot.forEach((doc) => list.push({ id: doc.id, ...doc.data() }));
+      snapshot.forEach((doc) =>
+        list.push({ id: doc.id, ...doc.data() })
+      );
       setServices(list);
     });
 
@@ -31,13 +34,17 @@ export default function BusinessDashboard() {
   return (
     <PageLayout>
       {!currentUser ? (
-        <p style={{ padding: 20 }}>Please log in to view your dashboard.</p>
+        <p style={{ padding: 20 }}>
+          Please log in to view your dashboard.
+        </p>
       ) : (
         <div className="business-dashboard-container">
           <h1>Your Projects</h1>
 
           {services.length === 0 && (
-            <p className="empty-text">You have no active or past projects yet.</p>
+            <p className="empty-text">
+              You have no active or past projects yet.
+            </p>
           )}
 
           <div className="service-list">
@@ -49,11 +56,17 @@ export default function BusinessDashboard() {
               >
                 <div className="service-info-section">
                   <h3>Project with {service.creatorId}</h3>
-                  <p><strong>Status:</strong> {service.status}</p>
-                  <p><strong>Price:</strong> ${service.price}</p>
+                  <p>
+                    <strong>Status:</strong> {service.status}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ${service.price}
+                  </p>
                   <p>
                     <strong>Created:</strong>{" "}
-                    {new Date(service.createdAt).toLocaleDateString()}
+                    {service.createdAt
+                      ? new Date(service.createdAt).toLocaleDateString()
+                      : "—"}
                   </p>
                 </div>
 
@@ -62,10 +75,15 @@ export default function BusinessDashboard() {
                     service.media[0].endsWith(".mp4") ? (
                       <video src={service.media[0]} muted />
                     ) : (
-                      <img src={service.media[0]} alt="thumbnail" />
+                      <img
+                        src={service.media[0]}
+                        alt="thumbnail"
+                      />
                     )
                   ) : (
-                    <div className="placeholder-thumb">No media yet</div>
+                    <div className="placeholder-thumb">
+                      No media yet
+                    </div>
                   )}
                 </div>
               </div>

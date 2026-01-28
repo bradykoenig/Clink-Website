@@ -1,7 +1,6 @@
 import "./ServicePage.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { db } from "../firebase/firebaseConfig";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useAuth } from "../firebase/AuthContext";
 
