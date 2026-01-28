@@ -7,9 +7,9 @@ import { db } from "../firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
-
 export default function ProfileSettings() {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState({
     name: "",
@@ -22,9 +22,6 @@ export default function ProfileSettings() {
 
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
-
-
   // Load profile from Firestore
   useEffect(() => {
     if (!currentUser) return;
@@ -34,7 +31,14 @@ export default function ProfileSettings() {
       const snap = await getDoc(ref);
 
       if (snap.exists()) {
-        setProfile(snap.data());
+        setProfile({
+          name: snap.data().name || "",
+          bio: snap.data().bio || "",
+          role: snap.data().role || "",
+          serviceType: snap.data().serviceType || "",
+          price: snap.data().price || 0,
+          photo: snap.data().photo || "",
+        });
       }
 
       setLoading(false);
@@ -48,24 +52,32 @@ export default function ProfileSettings() {
   };
 
   const saveProfile = async () => {
-  if (!currentUser) return;
+    if (!currentUser) return;
 
-  try {
-    const ref = doc(db, "users", currentUser.uid);
-    await updateDoc(ref, profile);
+    try {
+      const ref = doc(db, "users", currentUser.uid);
 
-    // ✅ Redirect based on role
-    if (profile.role === "creator") {
-      navigate("/creator-dashboard");
-    } else if (profile.role === "business") {
-      navigate("/business-dashboard");
+      await updateDoc(ref, {
+        name: profile.name,
+        bio: profile.bio,
+        role: profile.role,
+        serviceType: profile.role === "creator" ? profile.serviceType : "",
+        price: profile.role === "creator" ? profile.price : 0,
+        photo: profile.photo,
+      });
+
+      alert("Profile updated successfully!");
+
+      navigate(
+        profile.role === "creator"
+          ? "/creator-dashboard"
+          : "/business-dashboard"
+      );
+    } catch (err) {
+      console.error("Failed to save profile:", err);
+      alert("Failed to save profile changes.");
     }
-  } catch (err) {
-    alert("Failed to save profile");
-    console.error(err);
-  }
-};
-
+  };
 
   const uploadPhoto = () => {
     if (!currentUser) return;
@@ -126,7 +138,7 @@ export default function ProfileSettings() {
           {/* Bio */}
           <label>Bio</label>
           <textarea
-            value={profile.profile}
+            value={profile.bio}
             onChange={(e) => handleChange("bio", e.target.value)}
           />
 

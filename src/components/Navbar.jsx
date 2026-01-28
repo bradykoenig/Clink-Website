@@ -1,5 +1,5 @@
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../firebase/AuthContext";
 import { db } from "../firebase/firebase";
@@ -7,6 +7,8 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 export default function Navbar() {
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -26,6 +28,16 @@ export default function Navbar() {
     return () => unsub();
   }, [currentUser]);
 
+  async function handleLogout() {
+    try {
+      await logout();
+      setDropdownOpen(false);
+      navigate("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  }
+
   return (
     <nav className="nav">
       <div className="nav-left">
@@ -43,26 +55,41 @@ export default function Navbar() {
               src={userData?.photo || "/default_user.png"}
               alt="avatar"
               className="nav-avatar"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={() => setDropdownOpen((prev) => !prev)}
             />
 
             {dropdownOpen && (
               <div className="nav-dropdown">
                 {userData?.role === "creator" ? (
-                  <Link to="/creator-dashboard" className="dd-item">
+                  <Link
+                    to="/creator-dashboard"
+                    className="dd-item"
+                    onClick={() => setDropdownOpen(false)}
+                  >
                     Creator Dashboard
                   </Link>
                 ) : (
-                  <Link to="/business-dashboard" className="dd-item">
+                  <Link
+                    to="/business-dashboard"
+                    className="dd-item"
+                    onClick={() => setDropdownOpen(false)}
+                  >
                     Business Dashboard
                   </Link>
                 )}
 
-                <Link to="/profile-settings" className="dd-item">
+                <Link
+                  to="/profile-settings"
+                  className="dd-item"
+                  onClick={() => setDropdownOpen(false)}
+                >
                   Profile Settings
                 </Link>
 
-                <button onClick={logout} className="dd-item logout">
+                <button
+                  className="dd-item logout"
+                  onClick={handleLogout}
+                >
                   Log Out
                 </button>
               </div>

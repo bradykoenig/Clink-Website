@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -17,7 +17,6 @@ export function AuthProvider({ children }) {
       if (user) {
         const ref = doc(db, "users", user.uid);
         const snap = await getDoc(ref);
-
         setProfile(snap.exists() ? snap.data() : null);
       } else {
         setProfile(null);
@@ -29,10 +28,18 @@ export function AuthProvider({ children }) {
     return () => unsub();
   }, []);
 
+  // ✅ LOGOUT FUNCTION (THIS WAS MISSING)
+  async function logout() {
+    await signOut(auth);
+    setCurrentUser(null);
+    setProfile(null);
+  }
+
   const value = {
     currentUser,
     profile,
     loading,
+    logout, // ✅ EXPOSE IT
     isCreator: profile?.role === "creator",
     isBusiness: profile?.role === "business",
   };
