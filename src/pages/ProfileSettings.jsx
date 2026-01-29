@@ -1,4 +1,3 @@
-// src/pages/ProfileSettings.jsx
 import "./ProfileSettings.css";
 import { useState, useEffect } from "react";
 import PageLayout from "../layouts/PageLayout";

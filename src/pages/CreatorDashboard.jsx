@@ -1,4 +1,3 @@
-// src/pages/CreatorDashboard.jsx
 import "./CreatorDashboard.css";
 import { useEffect, useState } from "react";
 import { db } from "../firebase/firebase";

@@ -1,4 +1,3 @@
-// src/pages/HireCreator.jsx
 import "./HireCreator.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";

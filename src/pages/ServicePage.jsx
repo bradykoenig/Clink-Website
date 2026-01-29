@@ -1,4 +1,3 @@
-// src/pages/ServicePage.jsx
 import "./ServicePage.css";
 import PageLayout from "../layouts/PageLayout";
 import { useParams, useNavigate } from "react-router-dom";
