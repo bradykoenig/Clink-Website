@@ -62,7 +62,7 @@ export default function Login() {
 
           <p className="auth-footer-text">
             Don’t have an account?{" "}
-            <Link to="/register">Create one</Link>
+            <Link to="/register">Create an account</Link>
           </p>
         </div>
       </div>

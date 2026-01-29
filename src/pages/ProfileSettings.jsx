@@ -6,6 +6,7 @@ import { useAuth } from "../firebase/AuthContext";
 import { db } from "../firebase/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { geocodeZip } from "../utils/geocodeZip";
 
 export default function ProfileSettings() {
   const { currentUser } = useAuth();
@@ -18,6 +19,8 @@ export default function ProfileSettings() {
     serviceType: "",
     price: "",
     photo: "",
+    zip: "",
+    location: null,
   });
 
   const [loading, setLoading] = useState(true);
@@ -39,6 +42,8 @@ export default function ProfileSettings() {
           serviceType: data.serviceType || "",
           price: data.price || 0,
           photo: data.photo || "",
+          zip: data.zip || "",
+          location: data.location || null,
         });
       }
 
@@ -55,13 +60,26 @@ export default function ProfileSettings() {
   const saveProfile = async () => {
     if (!currentUser) return;
 
+    if (!/^\d{5}$/.test(profile.zip)) {
+      alert("Please enter a valid 5-digit ZIP code.");
+      return;
+    }
+
     try {
       const ref = doc(db, "users", currentUser.uid);
+
+      // Only re-geocode if ZIP changed or location missing
+      let location = profile.location;
+      if (!location) {
+        location = await geocodeZip(profile.zip);
+      }
 
       await updateDoc(ref, {
         name: profile.name,
         bio: profile.bio,
         role: profile.role,
+        zip: profile.zip,
+        location,
         serviceType: profile.role === "creator" ? profile.serviceType : "",
         price: profile.role === "creator" ? profile.price : 0,
         photo: profile.photo || "",
@@ -76,7 +94,7 @@ export default function ProfileSettings() {
       );
     } catch (err) {
       console.error("Failed to save profile:", err);
-      alert("Failed to save profile changes.");
+      alert(err.message || "Failed to save profile changes.");
     }
   };
 
@@ -147,6 +165,18 @@ export default function ProfileSettings() {
           <textarea
             value={profile.bio}
             onChange={(e) => handleChange("bio", e.target.value)}
+          />
+
+          {/* ZIP */}
+          <label>ZIP Code</label>
+          <input
+            type="text"
+            maxLength={5}
+            value={profile.zip}
+            placeholder="e.g. 45202"
+            onChange={(e) =>
+              handleChange("zip", e.target.value.replace(/\D/g, ""))
+            }
           />
 
           {/* Role */}
