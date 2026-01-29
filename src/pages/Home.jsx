@@ -1,11 +1,11 @@
 import "./Home.css";
 import PageLayout from "../layouts/PageLayout";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
     <PageLayout>
       <div className="home-container">
-
         {/* HERO */}
         <section className="hero subtle-hero-bg">
           <h1 className="hero-title">
@@ -19,15 +19,15 @@ export default function Home() {
           </p>
 
           <div className="hero-buttons">
-            <a href="/creators" className="hero-btn primary">
+            <Link to="/creators" className="hero-btn primary">
               Find Creators
-            </a>
-            <a href="/services" className="hero-btn secondary">
+            </Link>
+
+            <Link to="/services" className="hero-btn secondary">
               Explore Services
-            </a>
+            </Link>
           </div>
         </section>
-
       </div>
     </PageLayout>
   );

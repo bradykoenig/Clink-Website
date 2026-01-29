@@ -2,7 +2,7 @@ import "./Auth.css";
 import { useState } from "react";
 import { loginUser } from "../firebase/auth";
 import PageLayout from "../layouts/PageLayout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ export default function Login() {
     try {
       setLoading(true);
       await loginUser(email, password);
-      navigate("/"); // later: dashboard redirect
+      navigate("/"); // later: role-based dashboard
     } catch (err) {
       alert(err.message);
     } finally {
@@ -62,7 +62,7 @@ export default function Login() {
 
           <p className="auth-footer-text">
             Don’t have an account?{" "}
-            <a href="/register">Create one</a>
+            <Link to="/register">Create one</Link>
           </p>
         </div>
       </div>

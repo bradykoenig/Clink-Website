@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Footer from "./components/Footer";
+import { HashRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+
 import Home from "./pages/Home";
 import Creators from "./pages/Creators";
 import Services from "./pages/Services";
@@ -13,37 +14,93 @@ import ProfileSettings from "./pages/ProfileSettings";
 import HireCreator from "./pages/HireCreator";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
-import NotFound from "./pages/NotFound.jsx";
+import NotFound from "./pages/NotFound";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
+
 import "./App.css";
 
-function App() {
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Public */}
+        <Route path="/" element={<Home />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Business-only */}
+        <Route
+          path="/creators"
+          element={
+            <RoleProtectedRoute allowedRole="business">
+              <Creators />
+            </RoleProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/hire/:creatorId"
+          element={
+            <RoleProtectedRoute allowedRole="business">
+              <HireCreator />
+            </RoleProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/business-dashboard"
+          element={
+            <RoleProtectedRoute allowedRole="business">
+              <BusinessDashboard />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* Creator-only */}
+        <Route
+          path="/creator-dashboard"
+          element={
+            <RoleProtectedRoute allowedRole="creator">
+              <CreatorDashboard />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* Any logged-in user */}
+        <Route
+          path="/profile-settings"
+          element={
+            <ProtectedRoute>
+              <ProfileSettings />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Payments */}
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+export default function App() {
   return (
     <Router>
       <div className="app-container">
-
         <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/creators" element={<Creators />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/creator/:id" element={<CreatorProfile />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<CreatorDashboard />} />
-            <Route path="/business-dashboard" element={<BusinessDashboard />} />
-            <Route path="/creator-dashboard" element={<CreatorDashboard />} />
-            <Route path="/profile-settings" element={<ProfileSettings />} />
-            <Route path="/hire/:creatorId" element={<HireCreator />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-cancel" element={<PaymentCancel />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AnimatedRoutes />
         </main>
-
       </div>
     </Router>
   );
 }
-
-export default App;

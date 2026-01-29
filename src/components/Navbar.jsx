@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -6,7 +7,7 @@ import { db } from "../firebase/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 
 export default function Navbar() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, profile, logout } = useAuth();
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
@@ -42,13 +43,24 @@ export default function Navbar() {
     <nav className="nav">
       <div className="nav-left">
         <Link to="/" className="nav-logo">CLINK</Link>
-        <Link to="/creators" className="nav-link">Find Creators</Link>
-        <Link to="/services" className="nav-link">Services</Link>
+
+        {/* 👀 Visible to logged-out users and businesses ONLY */}
+        {(!currentUser || profile?.role === "business") && (
+          <Link to="/creators" className="nav-link">
+            Find Creators
+          </Link>
+        )}
+
+        <Link to="/services" className="nav-link">
+          Services
+        </Link>
       </div>
 
       <div className="nav-right">
         {!currentUser ? (
-          <Link to="/login" className="btn-login">Login</Link>
+          <Link to="/login" className="btn-login">
+            Login
+          </Link>
         ) : (
           <div className="nav-user-section">
             <img
@@ -60,7 +72,7 @@ export default function Navbar() {
 
             {dropdownOpen && (
               <div className="nav-dropdown">
-                {userData?.role === "creator" ? (
+                {profile?.role === "creator" ? (
                   <Link
                     to="/creator-dashboard"
                     className="dd-item"

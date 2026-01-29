@@ -1,7 +1,7 @@
 import "./Auth.css";
 import { useState } from "react";
 import { registerUser } from "../firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import PageLayout from "../layouts/PageLayout";
 
 export default function Register() {
@@ -9,30 +9,26 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   async function handleRegister(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!role) {
-    alert("Please select a role.");
-    return;
+    if (!role) {
+      alert("Please select a role.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await registerUser({ email, password, role });
+      navigate("/profile-settings");
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
   }
-
-  try {
-    setLoading(true);
-    await registerUser({ email, password, role });
-
-    // 🔥 Always finish onboarding first
-    navigate("/profile-settings");
-  } catch (err) {
-    alert(err.message);
-  } finally {
-    setLoading(false);
-  }
-}
-
 
   return (
     <PageLayout>
@@ -85,7 +81,7 @@ export default function Register() {
           </form>
 
           <p className="auth-footer-text">
-            Already have an account? <a href="/login">Log in</a>
+            Already have an account? <Link to="/login">Log in</Link>
           </p>
         </div>
       </div>

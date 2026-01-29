@@ -11,12 +11,24 @@ import PageLayout from "../layouts/PageLayout";
 export default function HireCreator() {
   const { creatorId } = useParams();
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser, profile } = useAuth();
 
   const [creator, setCreator] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Load creator profile
+  // Role protection
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/login");
+      return;
+    }
+
+    if (profile?.role !== "business") {
+      navigate("/creators");
+    }
+  }, [currentUser, profile, navigate]);
+
+  // Load creator
   useEffect(() => {
     if (!creatorId) return;
 
@@ -31,13 +43,7 @@ export default function HireCreator() {
     return () => unsub();
   }, [creatorId]);
 
-  // Start Stripe checkout
   async function handleHire() {
-    if (!currentUser) {
-      navigate("/login");
-      return;
-    }
-
     try {
       const createCheckoutSession = httpsCallable(
         functions,

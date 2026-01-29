@@ -1,22 +1,40 @@
+// src/pages/ServicePage.jsx
 import "./ServicePage.css";
-import { useParams } from "react-router-dom";
+import PageLayout from "../layouts/PageLayout";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  updateDoc,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../firebase/firebase";
 import { useAuth } from "../firebase/AuthContext";
 
 export default function ServicePage() {
   const { serviceId } = useParams();
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
 
   const [service, setService] = useState(null);
   const [creator, setCreator] = useState(null);
   const [business, setBusiness] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [modalItem, setModalItem] = useState(null);
+
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
 
-  // 🔥 Load service in real-time
+  const [showModal, setShowModal] = useState(false);
+  const [modalItem, setModalItem] = useState(null);
+
+  // 🔐 Protect page
+  useEffect(() => {
+    if (!currentUser) navigate("/login");
+  }, [currentUser, navigate]);
+
+  // 🔥 Load service
   useEffect(() => {
     const ref = doc(db, "services", serviceId);
     const unsub = onSnapshot(ref, (snap) => {
@@ -25,59 +43,58 @@ export default function ServicePage() {
     return () => unsub();
   }, [serviceId]);
 
-  // 🔥 Load creator + business profiles
+  // 🔥 Load creator & business
   useEffect(() => {
     if (!service) return;
 
-    const unsub1 = onSnapshot(doc(db, "users", service.creatorId), (s) => {
+    const u1 = onSnapshot(doc(db, "users", service.creatorId), (s) => {
       if (s.exists()) setCreator({ id: s.id, ...s.data() });
     });
 
-    const unsub2 = onSnapshot(doc(db, "users", service.businessId), (s) => {
+    const u2 = onSnapshot(doc(db, "users", service.businessId), (s) => {
       if (s.exists()) setBusiness({ id: s.id, ...s.data() });
     });
 
     return () => {
-      unsub1();
-      unsub2();
+      u1();
+      u2();
     };
   }, [service]);
 
   if (!service || !creator || !business)
-    return <div className="loading">Loading service...</div>;
+    return (
+      <PageLayout>
+        <p style={{ padding: 40 }}>Loading service...</p>
+      </PageLayout>
+    );
 
-  const isCreator = currentUser?.uid === service.creatorId;
-  const isBusiness = currentUser?.uid === service.businessId;
+  const isCreator = currentUser.uid === service.creatorId;
+  const isBusiness = currentUser.uid === service.businessId;
 
-  // ------------------------------------------
-  // ⭐ Upload media (Cloudinary widget)
-  // ------------------------------------------
+  // ------------------------------------
+  // 📤 Upload Media
+  // ------------------------------------
   const uploadMedia = () => {
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dks4wgyhr",
         uploadPreset: "unsigned_uploads",
         folder: `services/${serviceId}`,
-        sources: ["local", "camera"],
-        multiple: false,
       },
       async (err, result) => {
         if (!err && result.event === "success") {
-          const url = result.info.secure_url;
-
           await updateDoc(doc(db, "services", serviceId), {
-            media: [...(service.media || []), url],
+            media: [...(service.media || []), result.info.secure_url],
           });
         }
       }
     );
-
     widget.open();
   };
 
-  // ------------------------------------------
-  // ⭐ Creator requests completion
-  // ------------------------------------------
+  // ------------------------------------
+  // ✅ Creator requests completion
+  // ------------------------------------
   const requestCompletion = async () => {
     await updateDoc(doc(db, "services", serviceId), {
       creatorRequestedCompletion: true,
@@ -85,165 +102,156 @@ export default function ServicePage() {
     });
   };
 
-  // ------------------------------------------
-  // ⭐ Business approves (completes service)
-  // ------------------------------------------
+  // ------------------------------------
+  // ⭐ Business approves + leaves review
+  // ------------------------------------
   const approveCompletion = async () => {
     await updateDoc(doc(db, "services", serviceId), {
       status: "completed",
-      businessReview: {
-        rating,
-        text: reviewText,
-        date: Date.now(),
-      },
+      completedAt: serverTimestamp(),
     });
 
-    // ⭐ Add review to creator's profile
-    await updateDoc(doc(db, "users", creator.id), {
-      reviews: [
-        ...(creator.reviews || []),
-        {
-          rating,
-          text: reviewText,
-          businessId: business.id,
-          date: Date.now(),
-        },
-      ],
+    await addDoc(collection(db, "users", creator.id, "reviews"), {
+      rating,
+      text: reviewText,
+      businessId: business.id,
+      serviceId,
+      createdAt: serverTimestamp(),
     });
+
+    alert("Service completed & review submitted!");
   };
 
-  // ------------------------------------------
-  // ⭐ Business requests revision
-  // ------------------------------------------
+  // ------------------------------------
+  // 🔁 Revision
+  // ------------------------------------
   const requestRevision = async () => {
     if ((service.revisionCount || 0) >= 2) {
-      alert("Maximum of 2 revisions allowed.");
+      alert("Maximum revisions reached.");
       return;
     }
 
     await updateDoc(doc(db, "services", serviceId), {
-      status: "revision_requested",
       revisionCount: (service.revisionCount || 0) + 1,
+      status: "revision_requested",
       creatorRequestedCompletion: false,
     });
   };
 
-  // ------------------------------------------
-  // ⭐ Open full-screen modal
-  // ------------------------------------------
   const openModal = (item) => {
     setModalItem(item);
     setShowModal(true);
   };
 
   return (
-    <div className="service-page">
-      <h1 className="service-title">Project Details</h1>
+    <PageLayout>
+      <div className="service-page">
+        <h1 className="service-title">Project</h1>
 
-      {/* USER SUMMARY */}
-      <div className="user-info-row">
-        <div className="user-box">
-          <img src={creator.photo} className="avatar" />
-          <div>
-            <h3>{creator.name}</h3>
-            <p className="role-text">Creator</p>
+        {/* USERS */}
+        <div className="user-info-row">
+          <div className="user-box">
+            <img src={creator.photo} className="avatar" />
+            <div>
+              <h3>{creator.name}</h3>
+              <p className="role-text">Creator</p>
+            </div>
+          </div>
+
+          <div className="user-box">
+            <img src={business.photo} className="avatar" />
+            <div>
+              <h3>{business.name}</h3>
+              <p className="role-text">Business</p>
+            </div>
           </div>
         </div>
 
-        <div className="user-box">
-          <img src={business.photo} className="avatar" />
-          <div>
-            <h3>{business.name}</h3>
-            <p className="role-text">Business</p>
-          </div>
+        <p className="status-line">
+          <strong>Status:</strong> {service.status}
+        </p>
+
+        {/* MEDIA */}
+        <h2>Media</h2>
+        <div className="media-grid">
+          {(service.media || []).map((item, idx) => (
+            <div
+              key={idx}
+              className="media-item"
+              onClick={() => openModal(item)}
+            >
+              {item.endsWith(".mp4") ? (
+                <>
+                  <video src={item} muted />
+                  <div className="video-icon">▶</div>
+                </>
+              ) : (
+                <img src={item} />
+              )}
+            </div>
+          ))}
         </div>
-      </div>
 
-      {/* STATUS */}
-      <p className="status-line">
-        <strong>Status:</strong> {service.status}
-      </p>
+        {/* CREATOR */}
+        {isCreator && service.status !== "completed" && (
+          <div className="action-section">
+            <button className="btn upload-btn" onClick={uploadMedia}>
+              Upload Media
+            </button>
 
-      {/* MEDIA GRID */}
-      <h2>Media</h2>
-      <div className="media-grid">
-        {(service.media || []).map((item, idx) => (
-          <div className="media-item" key={idx} onClick={() => openModal(item)}>
-            {item.endsWith(".mp4") ? (
-              <>
-                <video src={item} />
-                <div className="video-icon">▶</div>
-              </>
-            ) : (
-              <img src={item} />
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* CREATOR ACTIONS */}
-      {isCreator && (
-        <div className="action-section">
-          <button className="btn upload-btn" onClick={uploadMedia}>
-            Upload Image/Video
-          </button>
-
-          {!service.creatorRequestedCompletion &&
-            service.status !== "completed" && (
+            {!service.creatorRequestedCompletion && (
               <button className="btn completion-btn" onClick={requestCompletion}>
                 Request Completion
               </button>
             )}
-        </div>
-      )}
-
-      {/* BUSINESS ACTIONS */}
-      {isBusiness && service.creatorRequestedCompletion && (
-        <div className="approval-box">
-          <h2>Approve Final Delivery</h2>
-
-          <label>Rating</label>
-          <select
-            className="rating-select"
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-          >
-            {[5, 4, 3, 2, 1].map((r) => (
-              <option key={r} value={r}>
-                {r} Stars
-              </option>
-            ))}
-          </select>
-
-          <label>Review</label>
-          <textarea
-            className="review-box"
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-          />
-
-          <button className="btn approve-btn" onClick={approveCompletion}>
-            Approve & Complete
-          </button>
-
-          <button className="btn revision-btn" onClick={requestRevision}>
-            Request Revision ({service.revisionCount || 0}/2)
-          </button>
-        </div>
-      )}
-
-      {/* FULLSCREEN MODAL */}
-      {showModal && (
-        <div className="media-modal" onClick={() => setShowModal(false)}>
-          <div className="modal-content">
-            {modalItem.endsWith(".mp4") ? (
-              <video src={modalItem} controls autoPlay />
-            ) : (
-              <img src={modalItem} />
-            )}
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* BUSINESS */}
+        {isBusiness && service.creatorRequestedCompletion && (
+          <div className="approval-box">
+            <h2>Approve Delivery</h2>
+
+            <label>Rating</label>
+            <select
+              className="rating-select"
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+            >
+              {[5, 4, 3, 2, 1].map((r) => (
+                <option key={r}>{r}</option>
+              ))}
+            </select>
+
+            <label>Review</label>
+            <textarea
+              className="review-box"
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+            />
+
+            <button className="btn approve-btn" onClick={approveCompletion}>
+              Approve & Complete
+            </button>
+
+            <button className="btn revision-btn" onClick={requestRevision}>
+              Request Revision ({service.revisionCount || 0}/2)
+            </button>
+          </div>
+        )}
+
+        {showModal && (
+          <div className="media-modal" onClick={() => setShowModal(false)}>
+            <div className="modal-content">
+              {modalItem.endsWith(".mp4") ? (
+                <video src={modalItem} controls autoPlay />
+              ) : (
+                <img src={modalItem} />
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </PageLayout>
   );
 }

@@ -31,13 +31,14 @@ export default function ProfileSettings() {
       const snap = await getDoc(ref);
 
       if (snap.exists()) {
+        const data = snap.data();
         setProfile({
-          name: snap.data().name || "",
-          bio: snap.data().bio || "",
-          role: snap.data().role || "",
-          serviceType: snap.data().serviceType || "",
-          price: snap.data().price || 0,
-          photo: snap.data().photo || "",
+          name: data.name || "",
+          bio: data.bio || "",
+          role: data.role || "",
+          serviceType: data.serviceType || "",
+          price: data.price || 0,
+          photo: data.photo || "",
         });
       }
 
@@ -63,7 +64,7 @@ export default function ProfileSettings() {
         role: profile.role,
         serviceType: profile.role === "creator" ? profile.serviceType : "",
         price: profile.role === "creator" ? profile.price : 0,
-        photo: profile.photo,
+        photo: profile.photo || "",
       });
 
       alert("Profile updated successfully!");
@@ -87,6 +88,8 @@ export default function ProfileSettings() {
         cloudName: "dks4wgyhr",
         uploadPreset: "unsigned_uploads",
         folder: `users/${currentUser.uid}`,
+        cropping: true,
+        croppingAspectRatio: 1,
       },
       (error, result) => {
         if (!error && result.event === "success") {
@@ -119,9 +122,13 @@ export default function ProfileSettings() {
           <div className="photo-section">
             <img
               src={profile.photo || "/default_user.png"}
-              alt="profile"
+              alt=""
               className="profile-photo-edit"
+              onError={(e) => {
+                e.currentTarget.src = "/default_user.png";
+              }}
             />
+
             <button className="btn upload-btn" onClick={uploadPhoto}>
               Change Photo
             </button>
