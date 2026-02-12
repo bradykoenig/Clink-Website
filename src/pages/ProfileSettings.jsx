@@ -1,3 +1,4 @@
+// src/pages/ProfileSettings.jsx
 import "./ProfileSettings.css";
 import { useState, useEffect } from "react";
 import PageLayout from "../layouts/PageLayout";
@@ -22,6 +23,7 @@ export default function ProfileSettings() {
     location: null,
   });
 
+  const [originalZip, setOriginalZip] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Load profile from Firestore
@@ -34,6 +36,7 @@ export default function ProfileSettings() {
 
       if (snap.exists()) {
         const data = snap.data();
+
         setProfile({
           name: data.name || "",
           bio: data.bio || "",
@@ -44,6 +47,9 @@ export default function ProfileSettings() {
           zip: data.zip || "",
           location: data.location || null,
         });
+
+        // 🔥 Track original ZIP for change detection
+        setOriginalZip(data.zip || "");
       }
 
       setLoading(false);
@@ -67,9 +73,10 @@ export default function ProfileSettings() {
     try {
       const ref = doc(db, "users", currentUser.uid);
 
-      // Only re-geocode if ZIP changed or location missing
       let location = profile.location;
-      if (!location) {
+
+      // ✅ Re-geocode if ZIP changed OR location missing
+      if (!location || profile.zip !== originalZip) {
         location = await geocodeZip(profile.zip);
       }
 
@@ -145,13 +152,11 @@ export default function ProfileSettings() {
                 e.currentTarget.src = "/default_user.png";
               }}
             />
-
             <button className="btn upload-btn" onClick={uploadPhoto}>
               Change Photo
             </button>
           </div>
 
-          {/* Name */}
           <label>Name</label>
           <input
             type="text"
@@ -159,14 +164,12 @@ export default function ProfileSettings() {
             onChange={(e) => handleChange("name", e.target.value)}
           />
 
-          {/* Bio */}
           <label>Bio</label>
           <textarea
             value={profile.bio}
             onChange={(e) => handleChange("bio", e.target.value)}
           />
 
-          {/* ZIP */}
           <label>ZIP Code</label>
           <input
             type="text"
@@ -178,7 +181,6 @@ export default function ProfileSettings() {
             }
           />
 
-          {/* Role */}
           <label>Your Role</label>
           <select
             value={profile.role}
@@ -189,7 +191,6 @@ export default function ProfileSettings() {
             <option value="business">Business</option>
           </select>
 
-          {/* Creator-only fields */}
           {profile.role === "creator" && (
             <>
               <label>Service Type</label>

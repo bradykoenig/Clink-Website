@@ -36,19 +36,19 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .auth-card input {
-  color: #111;              /* visible text */
+  color: #111;
   background: #ffffff;
 }
 
 .auth-card input::placeholder {
-  color: #9ca3af;           /* subtle gray placeholder */
+  color: #9ca3af;
 }
 
-
+/* INPUT GROUP */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -75,15 +75,35 @@
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
+/* FORGOT PASSWORD */
+.forgot-wrapper {
+  margin-top: -6px;
+  margin-bottom: 4px;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
 /* BUTTON */
 .auth-btn {
-  margin-top: 10px;
+  margin-top: 8px;
   background: #2563eb;
   color: white;
   border: none;
   padding: 12px;
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -93,9 +113,31 @@
   background: #1e4fc3;
 }
 
+.auth-btn.secondary {
+  background: #f3f4f6;
+  color: #2563eb;
+}
+
+.auth-btn.secondary:hover {
+  background: #e5e7eb;
+}
+
+/* MESSAGES */
+.auth-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.auth-success {
+  color: #16a34a;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
 /* FOOTER TEXT */
 .auth-footer-text {
-  margin-top: 22px;
+  margin-top: 20px;
   text-align: center;
   font-size: 14px;
   color: #555;
@@ -109,4 +151,48 @@
 
 .auth-footer-text a:hover {
   text-decoration: underline;
+}
+
+/* Inline auth links */
+.auth-links-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.auth-link {
+  font-size: 13px;
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+/* Error styling */
+.auth-error {
+  color: #dc2626;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* Success styling */
+.auth-success {
+  color: #16a34a;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.verify-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.verify-actions .auth-btn {
+  flex: 1;
 }

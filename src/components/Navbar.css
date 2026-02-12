@@ -122,3 +122,34 @@
 .logout:hover {
   background: #ffe7e7;
 }
+
+/* OUTLINE LOGIN BUTTON */
+.btn-login-outline {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid #2f65f5;
+  color: #2f65f5;
+  background: transparent;
+  transition: 0.2s;
+}
+
+.btn-login-outline:hover {
+  background: #eef2ff;
+}
+
+/* SIGN UP BUTTON (Primary CTA) */
+.btn-signup {
+  padding: 8px 20px;
+  background: #2f65f5;
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-signup:hover {
+  background: #1f4cd8;
+}

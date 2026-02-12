@@ -1,4 +1,3 @@
-// src/components/Navbar.jsx
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -44,7 +43,7 @@ export default function Navbar() {
       <div className="nav-left">
         <Link to="/" className="nav-logo">CLINK</Link>
 
-        {/* 👀 Visible to logged-out users and businesses ONLY */}
+        {/* Visible to logged-out users and businesses ONLY */}
         {(!currentUser || profile?.role === "business") && (
           <Link to="/creators" className="nav-link">
             Find Creators
@@ -58,9 +57,15 @@ export default function Navbar() {
 
       <div className="nav-right">
         {!currentUser ? (
-          <Link to="/login" className="btn-login">
-            Login
-          </Link>
+          <>
+            <Link to="/login" className="btn-login-outline">
+              Login
+            </Link>
+
+            <Link to="/register" className="btn-signup">
+              Sign Up
+            </Link>
+          </>
         ) : (
           <div className="nav-user-section">
             <img

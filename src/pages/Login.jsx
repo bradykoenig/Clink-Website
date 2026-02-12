@@ -8,16 +8,28 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       setLoading(true);
-      await loginUser(email, password);
-      navigate("/"); // later: role-based dashboard
+      setError("");
+
+      const { user } = await loginUser(email, password);
+
+      if (!user.emailVerified) {
+        // silently redirect to resend page instead of showing red error
+        navigate("/resend-verification");
+        return;
+      }
+
+      navigate("/");
     } catch (err) {
-      alert(err.message);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -28,16 +40,14 @@ export default function Login() {
       <div className="auth-page">
         <div className="auth-card">
           <h1 className="auth-title">Welcome Back</h1>
-          <p className="auth-subtitle">
-            Log in to manage your services and projects.
-          </p>
+
+          {error && <p className="auth-error">{error}</p>}
 
           <form onSubmit={handleLogin} className="auth-form">
             <div className="form-group">
               <label>Email</label>
               <input
                 type="email"
-                placeholder="you@business.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -48,21 +58,31 @@ export default function Login() {
               <label>Password</label>
               <input
                 type="password"
-                placeholder="••••••••"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
-            <button className="auth-btn" type="submit" disabled={loading}>
+            {/* Clean subtle links row */}
+            <div className="auth-links-row">
+              <Link to="/forgot-password" className="auth-link">
+                Forgot password?
+              </Link>
+
+              <Link to="/resend-verification" className="auth-link">
+                Resend verification?
+              </Link>
+            </div>
+
+            <button className="auth-btn" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
           </form>
 
           <p className="auth-footer-text">
             Don’t have an account?{" "}
-            <Link to="/register">Create an account</Link>
+            <Link to="/register">Create one</Link>
           </p>
         </div>
       </div>

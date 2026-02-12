@@ -30,7 +30,6 @@ export default function Register() {
     try {
       setLoading(true);
 
-      // Convert ZIP → lat/lng
       const location = await geocodeZip(zip);
 
       await registerUser({
@@ -41,7 +40,7 @@ export default function Register() {
         location,
       });
 
-      navigate("/profile-settings");
+      navigate("/verify-email");
     } catch (err) {
       alert(err.message);
     } finally {

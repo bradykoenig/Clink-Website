@@ -1,8 +1,13 @@
 import "./Home.css";
 import PageLayout from "../layouts/PageLayout";
 import { Link } from "react-router-dom";
+import { useAuth } from "../firebase/AuthContext";
 
 export default function Home() {
+  const { profile } = useAuth();
+
+  const isCreator = profile?.role === "creator";
+
   return (
     <PageLayout>
       <div className="home-container">
@@ -19,13 +24,21 @@ export default function Home() {
           </p>
 
           <div className="hero-buttons">
-            <Link to="/creators" className="hero-btn primary">
-              Find Creators
-            </Link>
+            {!isCreator && (
+              <Link to="/creators" className="hero-btn primary">
+                Find Creators
+              </Link>
+            )}
 
-            <Link to="/services" className="hero-btn secondary">
-              Explore Services
-            </Link>
+            {isCreator ? (
+              <Link to="/creator-dashboard" className="hero-btn primary">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link to="/services" className="hero-btn secondary">
+                Explore Services
+              </Link>
+            )}
           </div>
         </section>
       </div>
