@@ -1,0 +1,119 @@
+/* ===== GLOBAL FLOATING BACKGROUND ===== */
+
+.floating-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f8faff 40%,
+    #f5f7ff 70%,
+    #ffffff 100%
+  );
+  animation: gradientShift 20s ease infinite alternate;
+}
+
+/* Subtle animated gradient */
+@keyframes gradientShift {
+  0% {
+    background-position: left;
+  }
+  100% {
+    background-position: right;
+  }
+}
+
+/* Base icon style */
+.icon {
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.1;
+  filter: blur(0.5px);
+}
+
+
+/* Sizes */
+.small  { width: 60px; height: 60px; }
+.medium { width: 90px; height: 90px; }
+.large {
+  width: 140px;
+  height: 140px;
+  opacity: 0.12;
+}
+
+/* SVG Icons (slightly lighter blue) */
+.camera {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%234f7cff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3' y='7' width='12' height='10' rx='2'/%3E%3Ccircle cx='9' cy='12' r='2.5'/%3E%3C/svg%3E");
+}
+
+.video {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%234f7cff' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='23 7 16 12 23 17 23 7'/%3E%3Crect x='1' y='5' width='15' height='14' rx='2'/%3E%3C/svg%3E");
+}
+
+.spark {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='%234f7cff' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E");
+}
+
+/* Spread icons more organically */
+.icon1  { top: 12%; left: 10%; animation: floatA 18s infinite; }
+.icon2  { top: 28%; left: 35%; animation: floatB 22s infinite; }
+.icon3  { top: 18%; left: 75%; animation: floatC 20s infinite; }
+
+.icon4  { top: 48%; left: 8%;  animation: floatB 24s infinite; }
+.icon5  { top: 52%; left: 55%; animation: floatA 26s infinite; }
+.icon6  { top: 42%; left: 88%; animation: floatC 21s infinite; }
+
+.icon7  { top: 72%; left: 18%; animation: floatC 23s infinite; }
+.icon8  { top: 76%; left: 50%; animation: floatA 19s infinite; }
+.icon9  { top: 82%; left: 85%; animation: floatB 25s infinite; }
+
+.icon10 { top: 6%;  left: 55%; animation: floatB 28s infinite; }
+.icon11 { top: 90%; left: 30%; animation: floatA 27s infinite; }
+.icon12 { top: 63%; left: 68%; animation: floatC 22s infinite; }
+
+.icon13 { top: 8%;  left: 85%; animation: floatA 21s infinite; }
+.icon14 { top: 32%; left: 15%; animation: floatB 23s infinite; }
+.icon15 { top: 58%; left: 40%; animation: floatC 24s infinite; }
+
+.icon16 { top: 75%; left: 65%; animation: floatA 26s infinite; }
+.icon17 { top: 22%; left: 50%; animation: floatB 28s infinite; }
+.icon18 { top: 68%; left: 5%;  animation: floatC 20s infinite; }
+
+.icon19 { top: 48%; left: 78%; animation: floatA 27s infinite; }
+.icon20 { top: 88%; left: 55%; animation: floatB 25s infinite; }
+
+
+/* Slower, more premium motion */
+@keyframes floatA {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-25px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes floatB {
+  0%   { transform: translateX(0px); }
+  50%  { transform: translateX(30px); }
+  100% { transform: translateX(0px); }
+}
+
+@keyframes floatC {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(35px); }
+  100% { transform: translateY(0px); }
+}
+
+.app-container {
+  position: relative;
+  z-index: 1;
+}
+
+.page-wrapper {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}

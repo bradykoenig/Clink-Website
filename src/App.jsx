@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
+import FloatingBackground from "./components/FloatingBackground";
+
 import Home from "./pages/Home";
 import Creators from "./pages/Creators";
 import Services from "./pages/Services";
@@ -24,7 +26,6 @@ import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResendVerification from "./pages/ResendVerification";
 
-
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import VerifiedRoute from "./components/VerifiedRoute";
@@ -37,7 +38,6 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
@@ -47,7 +47,6 @@ function AnimatedRoutes() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/resend-verification" element={<ResendVerification />} />
 
-        {/* Business-only (verified) */}
         <Route
           path="/creators"
           element={
@@ -81,7 +80,6 @@ function AnimatedRoutes() {
           }
         />
 
-        {/* Creator-only (verified) */}
         <Route
           path="/creator-dashboard"
           element={
@@ -93,7 +91,6 @@ function AnimatedRoutes() {
           }
         />
 
-        {/* Any verified user */}
         <Route
           path="/profile-settings"
           element={
@@ -105,11 +102,8 @@ function AnimatedRoutes() {
           }
         />
 
-        {/* Payments */}
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />
-
-        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
@@ -119,6 +113,8 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <Router>
+      <FloatingBackground /> {/* Render ONCE globally */}
+
       <div className="app-container">
         <main className="main-content">
           <AnimatedRoutes />

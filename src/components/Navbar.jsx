@@ -11,6 +11,7 @@ export default function Navbar() {
 
   const [userData, setUserData] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
@@ -32,6 +33,7 @@ export default function Navbar() {
     try {
       await logout();
       setDropdownOpen(false);
+      setMobileOpen(false);
       navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
@@ -43,29 +45,29 @@ export default function Navbar() {
       <div className="nav-left">
         <Link to="/" className="nav-logo">CLINK</Link>
 
-        {/* Visible to logged-out users and businesses ONLY */}
-        {(!currentUser || profile?.role === "business") && (
-          <Link to="/creators" className="nav-link">
-            Find Creators
-          </Link>
-        )}
+        <div className="nav-desktop-links">
+          {(!currentUser || profile?.role === "business") && (
+            <Link to="/creators" className="nav-link">
+              Find Creators
+            </Link>
+          )}
 
-        <Link to="/services" className="nav-link">
-          Services
-        </Link>
+          <Link to="/services" className="nav-link">
+            Services
+          </Link>
+        </div>
       </div>
 
       <div className="nav-right">
         {!currentUser ? (
-          <>
+          <div className="nav-desktop-auth">
             <Link to="/login" className="btn-login-outline">
               Login
             </Link>
-
             <Link to="/register" className="btn-signup">
               Sign Up
             </Link>
-          </>
+          </div>
         ) : (
           <div className="nav-user-section">
             <img
@@ -113,7 +115,59 @@ export default function Navbar() {
             )}
           </div>
         )}
+
+        {/* MOBILE HAMBURGER */}
+        <div
+          className={`hamburger ${mobileOpen ? "active" : ""}`}
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
+
+      {/* MOBILE MENU */}
+      {mobileOpen && (
+        <div className="mobile-menu">
+          {(!currentUser || profile?.role === "business") && (
+            <Link to="/creators" onClick={() => setMobileOpen(false)}>
+              Find Creators
+            </Link>
+          )}
+
+          <Link to="/services" onClick={() => setMobileOpen(false)}>
+            Services
+          </Link>
+
+          {!currentUser ? (
+            <>
+              <Link to="/login" onClick={() => setMobileOpen(false)}>
+                Login
+              </Link>
+              <Link to="/register" className="mobile-signup" onClick={() => setMobileOpen(false)}>
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <>
+              {profile?.role === "creator" ? (
+                <Link to="/creator-dashboard" onClick={() => setMobileOpen(false)}>
+                  Creator Dashboard
+                </Link>
+              ) : (
+                <Link to="/business-dashboard" onClick={() => setMobileOpen(false)}>
+                  Business Dashboard
+                </Link>
+              )}
+              <Link to="/profile-settings" onClick={() => setMobileOpen(false)}>
+                Profile Settings
+              </Link>
+              <button onClick={handleLogout}>Log Out</button>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
