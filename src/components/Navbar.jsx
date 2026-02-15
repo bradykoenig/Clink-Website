@@ -40,21 +40,40 @@ export default function Navbar() {
     }
   }
 
+  // Determine dashboard route
+  const dashboardRoute =
+    profile?.role === "creator"
+      ? "/creator-dashboard"
+      : "/business-dashboard";
+
   return (
     <nav className="nav">
       <div className="nav-left">
-        <Link to="/" className="nav-logo">CLINK</Link>
+        <Link to="/" className="nav-logo">
+          CLINK
+        </Link>
 
         <div className="nav-desktop-links">
-          {(!currentUser || profile?.role === "business") && (
+          {/* DASHBOARD (Alphabetical #1) */}
+          {currentUser && (
+            <Link to={dashboardRoute} className="nav-link">
+              Dashboard
+            </Link>
+          )}
+
+          {/* FIND CREATORS (Alphabetical #2) – Business Only */}
+          {profile?.role === "business" && (
             <Link to="/creators" className="nav-link">
               Find Creators
             </Link>
           )}
 
-          <Link to="/services" className="nav-link">
-            Services
-          </Link>
+          {/* SERVICES (Alphabetical #3) – Business Only */}
+          {profile?.role === "business" && (
+            <Link to="/services" className="nav-link">
+              Services
+            </Link>
+          )}
         </div>
       </div>
 
@@ -79,23 +98,13 @@ export default function Navbar() {
 
             {dropdownOpen && (
               <div className="nav-dropdown">
-                {profile?.role === "creator" ? (
-                  <Link
-                    to="/creator-dashboard"
-                    className="dd-item"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Creator Dashboard
-                  </Link>
-                ) : (
-                  <Link
-                    to="/business-dashboard"
-                    className="dd-item"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Business Dashboard
-                  </Link>
-                )}
+                <Link
+                  to={dashboardRoute}
+                  className="dd-item"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  Dashboard
+                </Link>
 
                 <Link
                   to="/profile-settings"
@@ -130,36 +139,38 @@ export default function Navbar() {
       {/* MOBILE MENU */}
       {mobileOpen && (
         <div className="mobile-menu">
-          {(!currentUser || profile?.role === "business") && (
-            <Link to="/creators" onClick={() => setMobileOpen(false)}>
-              Find Creators
+          {currentUser && (
+            <Link to={dashboardRoute} onClick={() => setMobileOpen(false)}>
+              Dashboard
             </Link>
           )}
 
-          <Link to="/services" onClick={() => setMobileOpen(false)}>
-            Services
-          </Link>
+          {profile?.role === "business" && (
+            <>
+              <Link to="/creators" onClick={() => setMobileOpen(false)}>
+                Find Creators
+              </Link>
+              <Link to="/services" onClick={() => setMobileOpen(false)}>
+                Services
+              </Link>
+            </>
+          )}
 
           {!currentUser ? (
             <>
               <Link to="/login" onClick={() => setMobileOpen(false)}>
                 Login
               </Link>
-              <Link to="/register" className="mobile-signup" onClick={() => setMobileOpen(false)}>
+              <Link
+                to="/register"
+                className="mobile-signup"
+                onClick={() => setMobileOpen(false)}
+              >
                 Sign Up
               </Link>
             </>
           ) : (
             <>
-              {profile?.role === "creator" ? (
-                <Link to="/creator-dashboard" onClick={() => setMobileOpen(false)}>
-                  Creator Dashboard
-                </Link>
-              ) : (
-                <Link to="/business-dashboard" onClick={() => setMobileOpen(false)}>
-                  Business Dashboard
-                </Link>
-              )}
               <Link to="/profile-settings" onClick={() => setMobileOpen(false)}>
                 Profile Settings
               </Link>
