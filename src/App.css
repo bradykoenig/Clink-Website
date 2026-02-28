@@ -1,97 +1,199 @@
-/* FULL-PAGE RESET */
-html, body, #root {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  background-color: #f7f7f7;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+/* ========================================= */
+/* RESET + BASE FOUNDATION */
+/* ========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* REMOVE ALL VITE BOILERPLATE FOREVER */
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background-color: #f7f7f7;
+  overflow-x: hidden; /* Prevent horizontal scroll globally */
+}
+
+/* Remove Vite boilerplate forever */
 .logo,
 .card,
 .read-the-docs {
   display: none !important;
 }
 
-/* ENSURE ROOT IS TRULY FULL WIDTH */
+/* Ensure root behaves properly */
 #root {
   max-width: 100% !important;
-  padding: 0 !important;
   margin: 0 !important;
+  padding: 0 !important;
   text-align: left !important;
 }
 
-/* GLOBAL SECTION STYLE */
-section {
-  width: 100%;
-}
-/* STOP horizontal scrolling everywhere */
-html, body {
-  overflow-x: hidden;
-}
-
-/* Make ALL content fit the width */
-.main-content {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Prevent any element from stretching past the screen */
-* {
-  box-sizing: border-box;
-}
-
-
-/* FULL PAGE LAYOUT */
-.page-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #ffffff;
-}
-
-/* MAIN CONTENT GROWS */
-.page-content {
-  flex: 1;
-  width: 100%;
-}
-
-/* ==============================
-   LAYOUT FIX (IMPORTANT)
-   - Footer sticks to bottom
-   - Content expands to fill page
-============================== */
-
-body {
-  background: #ffffff; /* Pure white */
-}
+/* ========================================= */
+/* UNIVERSAL LAYOUT SYSTEM */
+/* ========================================= */
 
 .page-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  position: relative;
-  z-index: 1; /* Above floating bg */
-  background: transparent; /* IMPORTANT */
-}
-
-.page-content {
-  flex: 1;
+  background: transparent;
   position: relative;
   z-index: 1;
 }
 
-/* Keep navbar/footer above background */
+.page-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep navbar & footer above backgrounds */
 .nav,
 footer {
   position: relative;
   z-index: 2;
 }
 
-.app-container {
-  position: relative;
-  z-index: 1;
+/* ========================================= */
+/* GLOBAL TYPOGRAPHY SCALE */
+/* ========================================= */
+
+h1 {
+  font-size: 34px;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+}
+
+h2 {
+  font-size: 22px;
+  margin: 0 0 12px 0;
+}
+
+h3 {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+}
+
+p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 10px 0;
+  color: #374151;
+}
+
+/* ========================================= */
+/* UNIVERSAL BUTTON SYSTEM */
+/* ========================================= */
+
+button,
+.btn {
+  min-height: 44px; /* iOS touch safe */
+  font-size: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+button:hover:not(:disabled),
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:disabled,
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ========================================= */
+/* MEDIA SAFETY */
+/* ========================================= */
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ========================================= */
+/* SECTION + CONTENT SAFETY */
+/* ========================================= */
+
+section {
+  width: 100%;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ========================================= */
+/* RESPONSIVE SYSTEM */
+/* ========================================= */
+
+@media (max-width: 1024px) {
+  .page-content {
+    padding: 36px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .page-content {
+    padding: 28px 16px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  button,
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .page-content {
+    padding: 20px 14px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h2 {
+    font-size: 17px;
+  }
+
+  p {
+    font-size: 13.5px;
+  }
 }

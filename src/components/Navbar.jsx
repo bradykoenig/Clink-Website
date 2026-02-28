@@ -6,7 +6,10 @@ import { db } from "../firebase/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 
 export default function Navbar() {
-  const { currentUser, profile, logout } = useAuth();
+  const { currentUser, loading, logout } = useAuth();
+
+  if (loading) return null;
+
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState(null);
@@ -40,38 +43,61 @@ export default function Navbar() {
     }
   }
 
-  // Determine dashboard route
+  // ✅ ROLE NOW ONLY FROM FIRESTORE SNAPSHOT
+  const role = userData?.role;
+  const isVerified = currentUser?.emailVerified;
+
   const dashboardRoute =
-    profile?.role === "creator"
+    role === "creator"
       ? "/creator-dashboard"
-      : "/business-dashboard";
+      : role === "business"
+      ? "/business-dashboard"
+      : "/";
+
+  const showBusinessLinks = role === "business" && isVerified;
+  const showCreatorPortfolio = role === "creator" && isVerified;
 
   return (
     <nav className="nav">
       <div className="nav-left">
-        <Link to="/" className="nav-logo">
+        <Link
+          to="/"
+          className="nav-logo"
+          onClick={() => {
+            setDropdownOpen(false);
+            setMobileOpen(false);
+          }}
+        >
           CLINK
         </Link>
 
         <div className="nav-desktop-links">
-          {/* DASHBOARD (Alphabetical #1) */}
-          {currentUser && (
+          {currentUser && isVerified && (
             <Link to={dashboardRoute} className="nav-link">
               Dashboard
             </Link>
           )}
 
-          {/* FIND CREATORS (Alphabetical #2) – Business Only */}
-          {profile?.role === "business" && (
-            <Link to="/creators" className="nav-link">
-              Find Creators
+          {showCreatorPortfolio && (
+            <Link to="/portfolio" className="nav-link">
+              Portfolio
             </Link>
           )}
 
-          {/* SERVICES (Alphabetical #3) – Business Only */}
-          {profile?.role === "business" && (
-            <Link to="/services" className="nav-link">
-              Services
+          {showBusinessLinks && (
+            <>
+              <Link to="/creators" className="nav-link">
+                Find Creators
+              </Link>
+              <Link to="/services" className="nav-link">
+                Services
+              </Link>
+            </>
+          )}
+
+          {currentUser && !isVerified && (
+            <Link to="/verify-email" className="nav-link verify-link">
+              Verify Email
             </Link>
           )}
         </div>
@@ -98,13 +124,37 @@ export default function Navbar() {
 
             {dropdownOpen && (
               <div className="nav-dropdown">
-                <Link
-                  to={dashboardRoute}
-                  className="dd-item"
-                  onClick={() => setDropdownOpen(false)}
-                >
-                  Dashboard
-                </Link>
+                {isVerified && (
+                  <>
+                    <Link
+                      to={dashboardRoute}
+                      className="dd-item"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+
+                    {showCreatorPortfolio && (
+                      <Link
+                        to="/portfolio"
+                        className="dd-item"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        My Portfolio
+                      </Link>
+                    )}
+                  </>
+                )}
+
+                {!isVerified && (
+                  <Link
+                    to="/verify-email"
+                    className="dd-item"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Verify Email
+                  </Link>
+                )}
 
                 <Link
                   to="/profile-settings"
@@ -114,10 +164,15 @@ export default function Navbar() {
                   Profile Settings
                 </Link>
 
-                <button
-                  className="dd-item logout"
-                  onClick={handleLogout}
+                <Link
+                  to="/terms"
+                  className="dd-item dd-terms"
+                  onClick={() => setDropdownOpen(false)}
                 >
+                  Terms of Service
+                </Link>
+
+                <button className="dd-item logout" onClick={handleLogout}>
                   Log Out
                 </button>
               </div>
@@ -125,7 +180,6 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* MOBILE HAMBURGER */}
         <div
           className={`hamburger ${mobileOpen ? "active" : ""}`}
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -136,16 +190,21 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
       {mobileOpen && (
         <div className="mobile-menu">
-          {currentUser && (
+          {currentUser && isVerified && (
             <Link to={dashboardRoute} onClick={() => setMobileOpen(false)}>
               Dashboard
             </Link>
           )}
 
-          {profile?.role === "business" && (
+          {showCreatorPortfolio && (
+            <Link to="/portfolio" onClick={() => setMobileOpen(false)}>
+              Portfolio
+            </Link>
+          )}
+
+          {showBusinessLinks && (
             <>
               <Link to="/creators" onClick={() => setMobileOpen(false)}>
                 Find Creators
@@ -156,7 +215,28 @@ export default function Navbar() {
             </>
           )}
 
-          {!currentUser ? (
+          {!isVerified && currentUser && (
+            <Link to="/verify-email" onClick={() => setMobileOpen(false)}>
+              Verify Email
+            </Link>
+          )}
+
+          <Link
+            to="/terms"
+            className="mobile-terms"
+            onClick={() => setMobileOpen(false)}
+          >
+            Terms of Service
+          </Link>
+
+          {currentUser ? (
+            <>
+              <Link to="/profile-settings" onClick={() => setMobileOpen(false)}>
+                Profile Settings
+              </Link>
+              <button onClick={handleLogout}>Log Out</button>
+            </>
+          ) : (
             <>
               <Link to="/login" onClick={() => setMobileOpen(false)}>
                 Login
@@ -168,13 +248,6 @@ export default function Navbar() {
               >
                 Sign Up
               </Link>
-            </>
-          ) : (
-            <>
-              <Link to="/profile-settings" onClick={() => setMobileOpen(false)}>
-                Profile Settings
-              </Link>
-              <button onClick={handleLogout}>Log Out</button>
             </>
           )}
         </div>

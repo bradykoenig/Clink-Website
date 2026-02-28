@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import {
   doc,
@@ -19,7 +20,6 @@ import {
 export async function loginUser(email, password) {
   const cred = await signInWithEmailAndPassword(auth, email, password);
 
-  // Block unverified users
   if (!cred.user.emailVerified) {
     throw new Error("Email not verified");
   }
@@ -27,7 +27,6 @@ export async function loginUser(email, password) {
   const userRef = doc(db, "users", cred.user.uid);
   const snap = await getDoc(userRef);
 
-  // Sync verification flag in Firestore
   if (snap.exists() && snap.data().emailVerified !== true) {
     await updateDoc(userRef, { emailVerified: true });
   }
@@ -47,6 +46,11 @@ export async function registerUser({
   role,
   zip,
   location,
+  firstName,
+  lastName,
+  fullName,
+  serviceType,
+  price,
 }) {
   const cred = await createUserWithEmailAndPassword(
     auth,
@@ -56,29 +60,42 @@ export async function registerUser({
 
   const user = cred.user;
 
-  // Send verification email
+  // ✅ Update Firebase Auth display name
+  await updateProfile(user, {
+    displayName: fullName,
+  });
+
+  // ✅ Send verification email
   await sendEmailVerification(user, {
     url: window.location.origin,
   });
 
-  // Create Firestore user WITH ZIP + LOCATION
+  // ✅ Create Firestore user
   await setDoc(doc(db, "users", user.uid), {
     uid: user.uid,
     email,
     role,
     zip,
     location,
-    name: "",
+
+    // Name fields
+    firstName,
+    lastName,
+    fullName,
+    name: fullName,
+
+    // Creator-only fields
+    serviceType: role === "creator" ? serviceType || "" : "",
+    price: role === "creator" ? price || null : null,
+
+    // Shared profile fields
     bio: "",
     photo: "",
-    serviceType: "",
-    price: null,
     portfolio: [],
+
     emailVerified: false,
     createdAt: serverTimestamp(),
   });
-
-  // 🚫 DO NOT SIGN OUT HERE
 
   return cred;
 }

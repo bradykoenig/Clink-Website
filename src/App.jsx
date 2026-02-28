@@ -25,6 +25,12 @@ import PaymentCancel from "./pages/PaymentCancel";
 import NotFound from "./pages/NotFound";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResendVerification from "./pages/ResendVerification";
+import ServicePage from "./pages/ServicePage";
+import ChatPage from "./pages/ChatPage";
+import TermsOfService from "./pages/TermsOfService";
+import CreatorPortfolio from "./pages/CreatorPortfolio";
+import StripeReturn from "./pages/StripeReturn";
+import VerificationConfirmation from "./pages/VerificationConfirmation";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
@@ -46,6 +52,25 @@ function AnimatedRoutes() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/resend-verification" element={<ResendVerification />} />
+        <Route path="/chat/:serviceId" element={<ChatPage />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/portfolio" element={<CreatorPortfolio />} />
+        
+        <Route
+          path="/verification-confirmation"
+          element={<VerificationConfirmation />}
+        />
+
+        <Route
+          path="/stripe-return"
+          element={
+            <VerifiedRoute>
+              <RoleProtectedRoute allowedRole="creator">
+                <StripeReturn />
+              </RoleProtectedRoute>
+            </VerifiedRoute>
+          }
+        />
 
         <Route
           path="/creators"
@@ -91,6 +116,18 @@ function AnimatedRoutes() {
           }
         />
 
+        {/* ✅ THIS WAS MISSING */}
+        <Route
+          path="/service/:serviceId"
+          element={
+            <VerifiedRoute>
+              <ProtectedRoute>
+                <ServicePage />
+              </ProtectedRoute>
+            </VerifiedRoute>
+          }
+        />
+
         <Route
           path="/profile-settings"
           element={
@@ -104,6 +141,7 @@ function AnimatedRoutes() {
 
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

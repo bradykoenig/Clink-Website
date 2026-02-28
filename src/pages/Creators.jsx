@@ -72,7 +72,11 @@ export default function Creators() {
 
   /* Load creators */
   useEffect(() => {
-    const q = query(collection(db, "users"), where("role", "==", "creator"));
+    const q = query(
+      collection(db, "users"),
+      where("role", "==", "creator"),
+      where("stripeVerified", "==", true)
+    );
 
     const unsub = onSnapshot(q, (snapshot) => {
       const list = [];
@@ -218,8 +222,16 @@ export default function Creators() {
                           {creator.name || "Unnamed Creator"}
                         </h3>
                         <p className="creator-role">
-                          {creator.serviceType || "Creator"}
+                          {creator.serviceType === "Both"
+                            ? "Photo + Video"
+                            : creator.serviceType || "Creator"}
                         </p>
+
+                        <p>
+                          ⭐ {(creator.rating ?? 0).toFixed(1)} (
+                          {creator.reviewCount ?? 0})
+                        </p>
+
 
                         {creator.distanceMiles != null && (
                           <p className="creator-distance">

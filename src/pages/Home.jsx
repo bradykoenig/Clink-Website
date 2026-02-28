@@ -4,14 +4,15 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../firebase/AuthContext";
 
 export default function Home() {
-  const { profile } = useAuth();
+  const { currentUser, profile, loading, isCreator, isBusiness } = useAuth();
 
-  const isCreator = profile?.role === "creator";
+  if (loading) {
+    return null; // wait for auth to resolve
+  }
 
   return (
     <PageLayout>
       <div className="home-container">
-        {/* HERO */}
         <section className="hero subtle-hero-bg">
           <h1 className="hero-title">
             Hire Professional Creators.<br />
@@ -24,21 +25,38 @@ export default function Home() {
           </p>
 
           <div className="hero-buttons">
-            {!isCreator && (
-              <Link to="/creators" className="hero-btn primary">
-                Find Creators
-              </Link>
+
+            {/* NOT LOGGED IN */}
+            {!currentUser && (
+              <>
+                <Link to="/register" className="hero-btn primary">
+                  Get Started
+                </Link>
+                <Link to="/login" className="hero-btn secondary">
+                  Login
+                </Link>
+              </>
             )}
 
-            {isCreator ? (
+            {/* BUSINESS VIEW */}
+            {currentUser && isBusiness && (
+              <>
+                <Link to="/creators" className="hero-btn primary">
+                  Find Creators
+                </Link>
+                <Link to="/services" className="hero-btn secondary">
+                  Explore Services
+                </Link>
+              </>
+            )}
+
+            {/* CREATOR VIEW */}
+            {currentUser && isCreator && (
               <Link to="/creator-dashboard" className="hero-btn primary">
                 Go to Dashboard
               </Link>
-            ) : (
-              <Link to="/services" className="hero-btn secondary">
-                Explore Services
-              </Link>
             )}
+
           </div>
         </section>
       </div>
