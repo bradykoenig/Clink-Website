@@ -68,7 +68,12 @@ export default function Navbar() {
             setMobileOpen(false);
           }}
         >
-          CLINK
+          <img
+            src="/clink-logo.png"
+            alt="Clink logo"
+            className="nav-logo-img"
+          />
+          <span className="nav-logo-text">CLINK</span>
         </Link>
 
         <div className="nav-desktop-links">
