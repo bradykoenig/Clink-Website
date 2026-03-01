@@ -288,16 +288,26 @@ section h2 {
     max-width: 100%;
   }
 
-  .earnings-stats-row {
-    width: 100%;
-  }
+ .earnings-stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+}
 
   .earnings-stat {
-    flex: 1;
+    padding: 16px 18px;
+    border-radius: 20px;
   }
 
   .job-list {
     grid-template-columns: 1fr;
   }
+
+  @media (max-width: 500px) {
+  .earnings-stats-row {
+    grid-template-columns: 1fr;
+  }
+}
 
 }
