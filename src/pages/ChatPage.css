@@ -168,15 +168,21 @@
 /* MOBILE */
 @media (max-width: 768px) {
   .chat-card {
-    height: calc(100vh - 120px);
+    flex: 1;
+    height: 100%;
   }
 
-  .chat-wrapper {
-    margin: 20px auto;
+ .chat-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: calc(100dvh - 80px);
+    display: flex;
   }
 
   .chat-body {
-    padding: 18px;
+    flex: 1;
+    overflow-y: auto;
   }
 
   .chat-bubble {
@@ -184,7 +190,7 @@
   }
 
   .chat-input-area {
-    padding: 10px 14px;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom));
   }
 
   .chat-input-area input {
@@ -196,4 +202,4 @@
     height: 38px;
     padding: 0 14px;
   }
-}
+}  
