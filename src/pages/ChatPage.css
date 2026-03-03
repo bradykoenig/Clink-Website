@@ -177,6 +177,17 @@
   cursor: not-allowed;
 }
 
+/* ================= DATE SEPARATOR ================= */
+
+.chat-date-separator {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 16px 0 6px;
+  opacity: 0.8;
+}
+
 /* ================= MOBILE TWEAKS ================= */
 
 @media (max-width: 768px) {

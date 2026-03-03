@@ -94,6 +94,26 @@ export default function ChatPage() {
     }
   };
 
+  const formatDateLabel = (date) => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return "Today";
+    }
+
+    if (date.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    }
+
+    return date.toLocaleDateString(undefined, {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   if (!service) {
     return (
       <PageLayout>
@@ -123,7 +143,6 @@ export default function ChatPage() {
                   alt=""
                   className="chat-avatar"
                 />
-
                 <div>
                   <div className="chat-name">
                     {otherUser.name || "User"}
@@ -160,45 +179,74 @@ export default function ChatPage() {
               </div>
             )}
 
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`chat-row ${
-                  msg.senderId === currentUser.uid ? "mine" : "theirs"
-                }`}
-              >
-                <div className="chat-bubble">
-                  <div>{msg.text}</div>
+            {messages.map((msg, index) => {
+              const msgDate = msg.createdAt?.seconds
+                ? new Date(msg.createdAt.seconds * 1000)
+                : null;
 
-                  {msg.createdAt && (
-                    <div className="chat-time">
-                      {new Date(
-                        msg.createdAt.seconds * 1000
-                      ).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+              const prevMsg = messages[index - 1];
+              const prevDate = prevMsg?.createdAt?.seconds
+                ? new Date(prevMsg.createdAt.seconds * 1000)
+                : null;
+
+              let showDate = false;
+
+              if (msgDate) {
+                if (!prevDate) {
+                  showDate = true;
+                } else {
+                  showDate =
+                    msgDate.toDateString() !== prevDate.toDateString();
+                }
+              }
+
+              return (
+                <div key={msg.id}>
+                  {showDate && msgDate && (
+                    <div className="chat-date-separator">
+                      {formatDateLabel(msgDate)}
                     </div>
                   )}
+
+                  <div
+                    className={`chat-row ${
+                      msg.senderId === currentUser.uid
+                        ? "mine"
+                        : "theirs"
+                    }`}
+                  >
+                    <div className="chat-bubble">
+                      <div>{msg.text}</div>
+
+                      {msgDate && (
+                        <div className="chat-time">
+                          {msgDate.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* INPUT */}
-            <div className="chat-input-area">
-              <input
-                placeholder="Write a message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") sendMessage();
-                }}
-              />
-              <button onClick={sendMessage} disabled={sending}>
-                {sending ? "…" : "➤"}
-              </button>
-            </div>
+          <div className="chat-input-area">
+            <input
+              placeholder="Write a message..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") sendMessage();
+              }}
+            />
+            <button onClick={sendMessage} disabled={sending}>
+              {sending ? "…" : "➤"}
+            </button>
+          </div>
         </div>
       </div>
     </PageLayout>
