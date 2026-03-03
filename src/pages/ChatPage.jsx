@@ -186,19 +186,19 @@ export default function ChatPage() {
           </div>
 
           {/* INPUT */}
-          <div className="chat-input-area">
-            <input
-              placeholder="Write a message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") sendMessage();
-              }}
-            />
-            <button onClick={sendMessage} disabled={sending}>
-              {sending ? "..." : "Send"}
-            </button>
-          </div>
+            <div className="chat-input-area">
+              <input
+                placeholder="Write a message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") sendMessage();
+                }}
+              />
+              <button onClick={sendMessage} disabled={sending}>
+                {sending ? "…" : "➤"}
+              </button>
+            </div>
         </div>
       </div>
     </PageLayout>

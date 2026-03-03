@@ -1,8 +1,14 @@
+/* ================= WRAPPER ================= */
+
 .chat-wrapper {
   max-width: 1000px;
-  margin: 60px auto;
+  margin: 0 auto;
   padding: 0 20px;
+  height: calc(100dvh - 80px); /* accounts for navbar */
+  display: flex;
 }
+
+/* ================= CARD ================= */
 
 .chat-card {
   background: #ffffff;
@@ -10,17 +16,18 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
-  height: 75vh;
+  flex: 1;
   overflow: hidden;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
+
 .chat-header {
-  padding: 24px 32px;
+  padding: 20px 24px;
   border-bottom: 1px solid #f1f1f1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .back-link {
@@ -36,23 +43,23 @@
 .chat-user {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .chat-avatar {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .chat-name {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .chat-status {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .chat-status.online {
@@ -63,15 +70,16 @@
   color: #888;
 }
 
-/* BODY */
+/* ================= BODY ================= */
+
 .chat-body {
   flex: 1;
-  padding: 32px;
+  padding: 20px;
   overflow-y: auto;
   background: #fafafa;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .chat-empty {
@@ -80,7 +88,8 @@
   margin-top: 60px;
 }
 
-/* MESSAGE ROW */
+/* ================= MESSAGE ROW ================= */
+
 .chat-row {
   display: flex;
 }
@@ -94,14 +103,13 @@
 }
 
 .chat-bubble {
-  max-width: 65%;
+  max-width: 75%;
   background: #ffffff;
-  border-radius: 16px;
-  padding: 14px 18px;
+  border-radius: 18px;
+  padding: 12px 16px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.4;
   border: 1px solid #e8e8e8;
-  position: relative;
 }
 
 .chat-row.mine .chat-bubble {
@@ -111,53 +119,57 @@
 }
 
 .chat-time {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 11px;
   opacity: 0.6;
 }
 
-/* INPUT */
+/* ================= INPUT ================= */
+
 .chat-input-area {
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-top: 1px solid #f1f1f1;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background: #ffffff;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
 }
 
 .chat-input-area input {
   flex: 1;
-  padding: 10px 16px;
+  height: 40px;
+  padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid #ddd;
+  border: 1px solid #e5e7eb;
   font-size: 14px;
   outline: none;
-  height: 40px;
+  background: #f9fafb;
 }
 
 .chat-input-area input:focus {
   border-color: #2f65f5;
-  box-shadow: 0 0 0 3px rgba(47, 101, 245, 0.12);
+  box-shadow: 0 0 0 2px rgba(47, 101, 245, 0.12);
+  background: #ffffff;
 }
 
 .chat-input-area button {
+  width: 40px;
   height: 40px;
-  padding: 0 18px;
-  border-radius: 999px;
+  border-radius: 50%;
   border: none;
   background: #2f65f5;
   color: white;
-  font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: 0.2s ease;
 }
 
-
 .chat-input-area button:hover {
   background: #1f4fe0;
-  transform: none;
 }
 
 .chat-input-area button:disabled {
@@ -165,41 +177,14 @@
   cursor: not-allowed;
 }
 
-/* MOBILE */
+/* ================= MOBILE TWEAKS ================= */
+
 @media (max-width: 768px) {
-  .chat-card {
-    flex: 1;
-    height: 100%;
-  }
-
- .chat-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 16px;
-    height: calc(100dvh - 80px);
-    display: flex;
-  }
-
-  .chat-body {
-    flex: 1;
-    overflow-y: auto;
+  .chat-wrapper {
+    padding: 0 12px;
   }
 
   .chat-bubble {
     max-width: 85%;
   }
-
-  .chat-input-area {
-    padding-bottom: calc(14px + env(safe-area-inset-bottom));
-  }
-
-  .chat-input-area input {
-    height: 38px;
-    font-size: 14px;
-  }
-
-  .chat-input-area button {
-    height: 38px;
-    padding: 0 14px;
-  }
-}  
+}
