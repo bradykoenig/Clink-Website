@@ -42,6 +42,13 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s ease;
+  min-height: 42px;
+}
+
+.filter-btn:focus-visible {
+  outline: none;
 }
 
 .filter-btn:hover {
@@ -49,11 +56,23 @@
   border-color: #d1d5db;
 }
 
-.active-filter {
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+.filter-btn:focus {
+  outline: none;
+}
+
+.filter-btn:active {
+  transform: scale(0.97);
+}
+
+.filter-btn:focus:not(.active-filter) {
+  background: #f4f6fb;
+  color: #374151;
+}
+
+.filter-btn.active-filter {
+  background: #2563eb !important;
+  color: white !important;
+  border-color: #2563eb !important;
 }
 
 /* GRID LAYOUT */
